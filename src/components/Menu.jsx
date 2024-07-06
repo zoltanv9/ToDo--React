@@ -1,10 +1,14 @@
+import Button from "./Button.jsx";
+
 export default function Menu({onButtonClick, onProjectClick, projects}) {
     return (
-        <div className="bg-neutral-900 rounded-tr-2xl px-12 pt-[80px] h-full">
-            <h1 className="uppercase text-white font-bold text-2xl mb-8">YOUR PROJECTS</h1>
-            <button className="bg-stone-700 text-stone-400 text-xl px-6 py-3 rounded-xl" onClick={onButtonClick}>+ Add
-                project
-            </button>
+        <aside className="bg-stone-900 rounded-tr-2xl px-12 pt-[80px] w-1/3">
+            <h1 className="uppercase text-stone-200 font-bold text-2xl mb-8">YOUR PROJECTS</h1>
+            <Button
+                className="bg-stone-700 hover:bg-stone-600"
+                onClick={onButtonClick}>
+                + Add project
+            </Button>
             <ul className="mt-10 text-neutral-500 text-xl shadow-md rounded-lg">
                 {projects.map((project, index) => (
                     <li
@@ -16,6 +20,6 @@ export default function Menu({onButtonClick, onProjectClick, projects}) {
                     </li>
                 ))}
             </ul>
-        </div>
+        </aside>
     );
 }
