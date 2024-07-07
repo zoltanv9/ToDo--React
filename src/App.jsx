@@ -5,28 +5,20 @@ import ProjectForm from "./components/ProjectForm.jsx";
 import EditProjectPage from "./components/EditProjectPage.jsx";
 
 function App() {
+    console.log('app rereendered')
     const [activePage, setActivePage] = useState('start')
     const [projects, setProjects] = useState([])
-    const [activeProjectIndex, setActiveProjectIndex] = useState({});
-    console.log('App rendered')
+    const [activeProjectIndex, setActiveProjectIndex] = useState(undefined);
 
     const handleOnSave = (project) => {
-        setProjects((prevState) => {
-            const copiedArray = JSON.parse(JSON.stringify(prevState));
-            copiedArray.push(project);
-            return copiedArray;
-        })
-        loadPage('start')
+        setProjects((prevState) => [...prevState, project])
+        setActivePage('start')
     }
     
     const handleOnEdit = (index) => {
         setActiveProjectIndex(index);
-        loadPage('edit')
+        setActivePage('edit')
     }
-    
-    const loadPage = ((pageIndex) => {
-        setActivePage(pageIndex);
-    })
 
     const handleOnClickAddTask = (taskName) => {
         setProjects((prevState) => {
@@ -60,35 +52,39 @@ function App() {
         setProjects((prevState) => {
             return prevState.filter((project, index) => index !== activeProjectIndex);
         });
-        loadPage('start');
+        setActiveProjectIndex(undefined);
+        setActivePage('start');
     }
-    
-    const renderComponent = () => {
-        if (activePage === 'edit') {
-            return <EditProjectPage 
-                project={projects[activeProjectIndex]}
-                onDelete={handleOnDelete}
-                onClickAddTask={handleOnClickAddTask}
-                onClickClearTask={handleOnClickClearTask}
-            />;
-        } else if (activePage === 'new') {
-            return <ProjectForm 
-                onNavigateBack={() => loadPage('start')}
-                onSave={handleOnSave}
-            />;
-        } else {
-            return <StartPage onButtonClick={() => loadPage('new')} />
-        }
-    };
+
+    let content;
+
+    if (activePage === 'edit') {
+        content = <EditProjectPage
+            key={activeProjectIndex}
+            project={projects[activeProjectIndex]}
+            onDelete={handleOnDelete}
+            onClickAddTask={handleOnClickAddTask}
+            onClickClearTask={handleOnClickClearTask}
+        />;
+    } else if (activePage === 'new') {
+        content = <ProjectForm
+            onNavigateBack={() => setActivePage('start')}
+            onSave={handleOnSave}
+        />;
+    } else {
+        content = <StartPage onButtonClick={() => setActivePage('new')} />
+    }
+
     return (
             <main className="flex-grow flex h-screen pt-8">
                 <Menu
                     projects={projects}
-                    onButtonClick={() => loadPage('new')}
+                    onButtonClick={() => setActivePage('new')}
                     onProjectClick={handleOnEdit}
+                    selectedProjectIndex={activeProjectIndex}
                 />
                 <div className="w-2/3">
-                    {renderComponent()}
+                    {content}
                 </div>
             </main>
     );

@@ -1,23 +1,20 @@
-import { useRef } from 'react';
+import {useState} from 'react';
 
 export default function EditProjectPage({project, onDelete, onClickAddTask, onClickClearTask}) {
-    console.log('project.tasks', project.tasks);
-    const inputRef = useRef(null);
+    console.log('rerender Edit page')
+    const [inputState, setInputState] = useState('');
     function formatDate(dateString) {
-        // Parse the input date string
-        const date = new Date(dateString);
+        return new Date(dateString).toLocaleDateString('us-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
 
-        // Array of month names
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-        // Extract the day, month, and year from the date object
-        const day = date.getDate();
-        const monthIndex = date.getMonth();
-        const year = date.getFullYear();
-
-        // Format the date parts into the desired format
-        return `${monthNames[monthIndex]} ${day}, ${year}`;
+    const handleAddTask = () => {
+        if (!inputState) return;
+        onClickAddTask(inputState);
+        setInputState('');
     }
     
     const formattedDate = formatDate(project.date);
@@ -35,18 +32,20 @@ export default function EditProjectPage({project, onDelete, onClickAddTask, onCl
                 </button>
             </div>
             <h3 className="text-stone-500 mb-6">{formattedDate}</h3>
-            <p className="text-xl">{project.description}</p>
+            <p className="text-xl whitespace-pre-wrap">{project.description}</p>
             <hr className="my-6 h-[3px] bg-gray-300"/>
             <h2 className="text-3xl font-bold text-stone-800">Tasks</h2>
             <div className="flex">
                 <input
                     className="block w-[360px] my-6 px-2 py-1 text-lg bg-stone-200 border-stone-400 rounded-sm outline-none focus:bg-stone-300 focus:border-[3px] focus:border-blue-500"
-                    ref={inputRef}
+                    type="text"
+                    value={inputState}
+                    onChange={(e) => setInputState(e.target.value)}
                 ></input>
                 <button
                     type="button"
                     className="p-6 text-lg text-stone-600 hover:text-blue-700"
-                    onClick={() => onClickAddTask(inputRef.current.value)}
+                    onClick={handleAddTask}
                 >
                     Add Task
                 </button>

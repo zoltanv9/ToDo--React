@@ -7,7 +7,7 @@ export default function StartPage({onButtonClick}) {
             <img src={logoImg} className="w-20 object-contain mx-auto" alt="logo"></img>
             <h1 className="text-2xl mt-4 text-stone-600 font-semibold">No Project Selected</h1>
             <p className="text-xl text-stone-500 mt-4">Select a project or get started with a new one</p>
-            <Button className="bg-stone-800 hover:bg-stone-700 mt-8" onClick={onButtonClick}>Create new project
+            <Button className="bg-stone-800 hover:bg-stone-700 mt-8 px-6 py-3" onClick={onButtonClick}>Create new project
             </Button>
         </div>
     );
